@@ -28,7 +28,7 @@ class Register extends Component {
         userStore.on(types.USER_REGISTERED, this.handleSubmitResponse);
     }
 
-    componentWillUnmound() {
+    componentWillUnmount() {
         userStore.removeListener(types.USER_REGISTERED, this.handleSubmitResponse);
     }
 

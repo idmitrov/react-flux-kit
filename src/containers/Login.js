@@ -27,7 +27,7 @@ class Login extends Component {
         userStore.on(types.USER_LOGGEDIN, this.handleSubmitResponse);
     }
 
-    componentWillUnmound() {
+    componentWillUnmount() {
         userStore.removeListener(types.USER_LOGGEDIN, this.handleSubmitResponse);
     }
 
