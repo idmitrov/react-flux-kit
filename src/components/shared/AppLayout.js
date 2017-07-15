@@ -10,6 +10,8 @@ import MenuIcon from 'material-ui-icons/Menu';
 import Drawer from 'material-ui/Drawer';
 import List, { ListItem, ListItemText } from 'material-ui/List';
 
+import AppNotifier from './AppNotifier';
+
 import history from '../../tools/history';
 
 class AppLayout extends Component {
@@ -27,6 +29,8 @@ class AppLayout extends Component {
     render() {
         return (
             <div id="app-wrapper">
+                <AppNotifier />
+
                 <AppBar position="static">
                     <Toolbar>
                         <IconButton color="contrast" aria-label="Menu">
