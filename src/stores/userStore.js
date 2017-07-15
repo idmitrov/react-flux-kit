@@ -20,16 +20,44 @@ class UserStore extends EventEmitter {
      * @param {Object} user 
      */
     login(user) {
-        this.emit(types.USER_LOGGEDIN, user);
+        requester.post('/auth/login', user)
+            .then(response => {
+                if (response.success) {
+                    this.emit(types.USER_LOGGEDIN, response);
+                }
+            });
     }
 
     /**
-     * @name Register
+     * @name register
      * @desc call API to register a new user
      * @param {Object} user 
      */
     register(user) {
-        this.emit(types.USER_REGISTERED, user);
+        requester.post('/auth/signup', user)
+            .then(response => {
+                if (response.success) {
+                    this.emit(types.USER_REGISTERED, response);
+                }
+            });
+    }
+
+    /**
+     * @name authenticate
+     * @desc Check the store if user exist if not call API
+     * @param {Object} user 
+     */
+    authenticate() {
+
+    }
+
+    /**
+     * @name authorize
+     * @desc Check the store if user is authorized if not call API
+     * @param {Object} user 
+     */
+    authorize() {
+
     }
 
     /**
