@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import update from 'immutability-helper';
 
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
@@ -19,7 +20,14 @@ class AppLayout extends Component {
         super();
 
         this.state = {
-            opened: false
+            drawer: {
+                opened: false,
+                list: [
+                    { name: 'Home', href: '/', title: 'Home' },
+                    { name: 'About', href: '/about', title: 'About' },
+                    { name: 'Test', href: '/test', title: 'Test' }
+                ]
+            }
         };
 
         this._changeRoute = this._changeRoute.bind(this);
@@ -43,7 +51,7 @@ class AppLayout extends Component {
                     </Toolbar>
                 </AppBar>
 
-                <Drawer anchor="left" open={this.state.opened} onRequestClose={this._toggleDrawer}>
+                <Drawer anchor="left" open={this.state.drawer.opened} onRequestClose={this._toggleDrawer}>
                     <Toolbar>
                         <Typography type="title" color="inherit">
                             {this.props.heading}
@@ -52,7 +60,7 @@ class AppLayout extends Component {
 
                     <List style={{ width: 250 }}>
                         {
-                            this.props.drawer.map(item => (
+                            this.state.drawer.list.map(item => (
                                 <ListItem key={item.name} button href={item.href} onClick={this._changeRoute}>
                                     <ListItemText primary={item.title} />
                                 </ListItem>
@@ -61,7 +69,7 @@ class AppLayout extends Component {
                     </List>
                 </Drawer>
 
-                <main className="container-fluid">
+                <main className="views-wrapper container-fluid">
                     {this.props.children}
                 </main>
             </div>
@@ -75,15 +83,20 @@ class AppLayout extends Component {
     }
 
     _toggleDrawer() {
-        this.setState({
-            opened: !this.state.opened
+        let newState = update(this.state, {
+            drawer: {
+                opened: {
+                    "$set": !this.state.drawer.opened
+                }
+            }
         });
+
+        this.setState(newState);
     }
 }
 
 AppLayout.propTypes = {
-    heading: PropTypes.string.isRequired,
-    drawer: PropTypes.array.isRequired
+    heading: PropTypes.string.isRequired
 };
 
 export default AppLayout;
