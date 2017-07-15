@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import update from 'immutability-helper';
 
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
@@ -10,13 +11,16 @@ class Register extends Component {
         super();
 
         this.state = {
-            name: null,
-            email: null,
-            password: null
+            user: {
+                name: null,
+                email: null,
+                password: null
+            }
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleValidation = this.handleValidation.bind(this);
     }
 
     render() {
@@ -37,6 +41,7 @@ class Register extends Component {
                             required
                             marginForm
                             onChange={this.handleChange}
+                            onBlur={this.handleValidation}
                         />
                     </div>
                 </div>
@@ -49,6 +54,7 @@ class Register extends Component {
                             required
                             marginForm
                             onChange={this.handleChange}
+                            onBlur={this.handleValidation}
                         />
                     </div>
                 </div>
@@ -62,6 +68,7 @@ class Register extends Component {
                             required
                             marginForm
                             onChange={this.handleChange}
+                            onBlur={this.handleValidation}
                         />
                     </div>
                 </div>
@@ -81,14 +88,24 @@ class Register extends Component {
     }
 
     handleChange(e) {
-        this.setState({
-            [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value
+        let newState = update(this.state, {
+            user: {
+                [e.target.name]: {
+                    "$set": e.target.type === 'checkbox' ? e.target.checked : e.target.value
+                }
+            }
         });
+
+        this.setState(newState);
     }
 
+    handleValidation(e) {
+        // TODO: Find a way to validate all inputs
+    }
+
+    // TODO: Call userAction instaad
     handleSubmit() {
-        // TODO: Call userAction instaad
-        requester.post('/auth/signup', this.state)
+        requester.post('/auth/signup', this.state.user)
             .then(response => {
                 console.log(response);
             });

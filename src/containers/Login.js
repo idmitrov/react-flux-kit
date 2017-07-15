@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import update from 'immutability-helper';
 
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
@@ -10,12 +11,15 @@ class Login extends Component {
         super();
 
         this.state = {
-            email: null,
-            password: null
+            user: {
+                email: null,
+                password: null
+            }
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleValidation = this.handleValidation.bind(this);
     }
 
     render() {
@@ -36,6 +40,9 @@ class Login extends Component {
                             required
                             marginForm
                             onChange={this.handleChange}
+                            onBlur={this.handleValidation}
+                            data-required
+                            data-error-message="Invalid email"
                         />
                     </div>
                 </div>
@@ -49,6 +56,9 @@ class Login extends Component {
                             required
                             marginForm
                             onChange={this.handleChange}
+                            onBlur={this.handleValidation}
+                            data-required
+                            data-error-message="Invalid email"
                         />
                     </div>
                 </div>
@@ -60,22 +70,34 @@ class Login extends Component {
                             color="contrast"
                             onClick={this.handleSubmit}>
                             Login
-                                </Button>
+                        </Button>
                     </div>
                 </div>
             </section>
         );
     }
 
-    handleChange(e) {
-        this.setState({
-            [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value
-        });
+    handleValidation(e) {
+        // TODO: Find a way to validate all inputs
     }
 
-    handleSubmit() {
-        // TODO: Call userAction instaad
-        requester.post('/auth/login', this.state)   
+    handleChange(e) {
+        let newState = update(this.state, {
+            user: {
+                [e.target.name]: {
+                    "$set": e.target.type === 'checkbox' ? e.target.checked : e.target.value
+                }
+            }
+        });
+
+        this.setState(newState);
+    }
+
+    // TODO: Call userAction instaad
+    handleSubmit(e) {
+        this.handleValidation(e);
+
+        requester.post('/auth/login', this.state.user)
             .then(response => {
                 console.log(response);
             });
