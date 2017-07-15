@@ -4,7 +4,9 @@ import update from 'immutability-helper';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 
-import requester from '../utils/requester';
+import userActions from '../actions/user/userActions';
+import * as types from '../actions/user/userActionTypes';
+import userStore from '../stores/userStore';
 
 class Login extends Component {
     constructor() {
@@ -17,9 +19,16 @@ class Login extends Component {
             }
         }
 
-        this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleValidation = this.handleValidation.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSubmitResponse = this.handleSubmitResponse.bind(this);
+
+        userStore.on(types.USER_LOGGEDIN, this.handleSubmitResponse);
+    }
+
+    componentWillUnmound() {
+        userStore.removeListener(types.USER_LOGGEDIN, this.handleSubmitResponse);
     }
 
     render() {
@@ -93,14 +102,14 @@ class Login extends Component {
         this.setState(newState);
     }
 
-    // TODO: Call userAction instaad
     handleSubmit(e) {
         this.handleValidation(e);
 
-        requester.post('/auth/login', this.state.user)
-            .then(response => {
-                console.log(response);
-            });
+        userActions.login(this.state.user);
+    }
+
+    handleSubmitResponse(e) {
+        console.log(e);
     }
 }
 

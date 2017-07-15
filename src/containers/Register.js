@@ -4,7 +4,9 @@ import update from 'immutability-helper';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 
-import requester from '../utils/requester';
+import userActions from '../actions/user/userActions';
+import * as types from '../actions/user/userActionTypes';
+import userStore from '../stores/userStore';
 
 class Register extends Component {
     constructor() {
@@ -18,9 +20,16 @@ class Register extends Component {
             }
         };
 
-        this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleValidation = this.handleValidation.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSubmitResponse = this.handleSubmitResponse.bind(this);
+
+        userStore.on(types.USER_REGISTERED, this.handleSubmitResponse);
+    }
+
+    componentWillUnmound() {
+        userStore.removeListener(types.USER_REGISTERED, this.handleSubmitResponse);
     }
 
     render() {
@@ -103,12 +112,14 @@ class Register extends Component {
         // TODO: Find a way to validate all inputs
     }
 
-    // TODO: Call userAction instaad
-    handleSubmit() {
-        requester.post('/auth/signup', this.state.user)
-            .then(response => {
-                console.log(response);
-            });
+    handleSubmit(e) {
+        this.handleValidation(e);
+
+        userActions.register(this.state.user);
+    }
+
+    handleSubmitResponse(e) {
+        console.log(e);
     }
 }
 
