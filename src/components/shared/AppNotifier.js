@@ -7,7 +7,7 @@ class AppNotifier extends Component {
         super();
 
         this.state = {
-            opened: true,
+            opened: false,
             type: 'normal',
             message: 'Welcome'
         };
