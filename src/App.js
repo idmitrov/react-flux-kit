@@ -15,7 +15,7 @@ class App extends Component {
             drawer: [
                 { name: 'Home', href: '/', title: 'Home' },
                 { name: 'About', href: '/about', title: 'About' },
-                { name: 'Test', href: '/test', title: 'Test' },
+                { name: 'Test', href: '/test', title: 'Test' }
             ]
         };
     }
