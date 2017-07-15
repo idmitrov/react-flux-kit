@@ -7,13 +7,13 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
-
 import Drawer from 'material-ui/Drawer';
 import List, { ListItem, ListItemText } from 'material-ui/List';
 
 import AppNotifier from './AppNotifier';
-
 import history from '../../tools/history';
+import * as types from '../../actions/user/userActionTypes';
+import userStore from '../../stores/userStore';
 
 class AppLayout extends Component {
     constructor() {
@@ -27,11 +27,17 @@ class AppLayout extends Component {
                     { name: 'About', href: '/about', title: 'About' },
                     { name: 'Test', href: '/test', title: 'Test' }
                 ]
+            },
+            user: {
+                name: null
             }
         };
 
         this._changeRoute = this._changeRoute.bind(this);
         this._toggleDrawer = this._toggleDrawer.bind(this);
+        this._handleUserLoggedIn = this._handleUserLoggedIn.bind(this);
+
+        userStore.on(types.USER_LOGGEDIN, this._handleUserLoggedIn);
     }
 
     render() {
@@ -45,9 +51,23 @@ class AppLayout extends Component {
                             <MenuIcon onClick={this._toggleDrawer} />
                         </IconButton>
 
-                        <Typography type="title" color="inherit">
+                        <Typography type="title" color="inherit" style={{ "flex": "1" }}>
                             {this.props.heading}
                         </Typography>
+
+                        {/* TODO: Improve rendering and anchors */}
+                        <div>
+                            {
+                                this.state.user.name ? (
+                                    <div>{this.state.user.name}</div>
+                                ) : (
+                                    <div>
+                                        <a href="/account/login" onClick={this._changeRoute}>Login</a>
+                                        <a href="/account/register" onClick={this._changeRoute}>Register</a>
+                                    </div>
+                                )
+                            }
+                        </div>
                     </Toolbar>
                 </AppBar>
 
@@ -61,9 +81,11 @@ class AppLayout extends Component {
                     <List style={{ width: 250 }}>
                         {
                             this.state.drawer.list.map(item => (
-                                <ListItem key={item.name} button href={item.href} onClick={this._changeRoute}>
-                                    <ListItemText primary={item.title} />
-                                </ListItem>
+                                <div key={item.name} onClick={this._toggleDrawer}>
+                                    <ListItem button href={item.href} onClick={this._changeRoute}>
+                                        <ListItemText primary={item.title} />
+                                    </ListItem>
+                                </div>
                             ))
                         }
                     </List>
@@ -76,10 +98,23 @@ class AppLayout extends Component {
         );
     }
 
-    _changeRoute(e) {
-        history.push(e.currentTarget.getAttribute('href'));
+    _handleUserLoggedIn(e) {
+        let newState = update(this.state, {
+            user: {
+                name: {
+                    "$set": e.user.name
+                }
+            }
+        });
 
-        this._toggleDrawer();
+        this.setState(newState);
+        history.push('/');
+    }
+
+    _changeRoute(e) {
+        e.preventDefault();
+
+        history.push(e.currentTarget.getAttribute('href'));
     }
 
     _toggleDrawer() {
