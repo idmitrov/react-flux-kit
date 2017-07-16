@@ -15,6 +15,21 @@ class UserStore extends EventEmitter {
     }
 
     /**
+     * @name logout
+     * @desc clean in memory user data
+     */
+    logout() {
+        this.user = null;
+
+        this.emit(types.USER_LOGGEDOUT, {
+            user: {
+                name: null
+            },
+            message: "Catch you later!"
+        });
+    }
+
+    /**
      * @name login
      * @desc call API to login a given user and save it in memory
      * @param {Object} user 
@@ -23,6 +38,11 @@ class UserStore extends EventEmitter {
         requester.post('/auth/login', user)
             .then(response => {
                 if (response.success) {
+                    this.user = {
+                        name: response.user.name,
+                        token: response.token
+                    };
+
                     this.emit(types.USER_LOGGEDIN, response);
                 }
             });
@@ -73,6 +93,10 @@ class UserStore extends EventEmitter {
             }
             case types.USER_REGISTER: {
                 this.register(action.payload);
+                break;
+            }
+            case types.USER_LOGOUT: {
+                this.logout();
                 break;
             }
             default: break;

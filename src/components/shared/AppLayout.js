@@ -5,6 +5,7 @@ import update from 'immutability-helper';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
+import ExitToApp from 'material-ui-icons/ExitToApp';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 import Drawer from 'material-ui/Drawer';
@@ -12,7 +13,9 @@ import List, { ListItem, ListItemText } from 'material-ui/List';
 
 import AppNotifier from './AppNotifier';
 import history from '../../tools/history';
+
 import * as types from '../../actions/user/userActionTypes';
+import userActions from '../../actions/user/userActions';
 import userStore from '../../stores/userStore';
 
 class AppLayout extends Component {
@@ -35,9 +38,11 @@ class AppLayout extends Component {
 
         this._changeRoute = this._changeRoute.bind(this);
         this._toggleDrawer = this._toggleDrawer.bind(this);
-        this._handleUserLoggedIn = this._handleUserLoggedIn.bind(this);
+        this._handleUserChange = this._handleUserChange.bind(this);
+        this._onLogout = this._onLogout.bind(this);
 
-        userStore.on(types.USER_LOGGEDIN, this._handleUserLoggedIn);
+        userStore.on(types.USER_LOGGEDIN, this._handleUserChange);
+        userStore.on(types.USER_LOGGEDOUT, this._handleUserChange);
     }
 
     render() {
@@ -59,7 +64,16 @@ class AppLayout extends Component {
                         <div>
                             {
                                 this.state.user.name ? (
-                                    <div>{this.state.user.name}</div>
+                                    <div>
+                                        Hi {this.state.user.name}
+                                        <IconButton
+                                            onClick={this._onLogout}
+                                            style={{ "verticalAlign": "middle" }}
+                                            color="contrast"
+                                            aria-label="Logout">
+                                            <ExitToApp />
+                                        </IconButton>
+                                    </div>
                                 ) : (
                                     <div>
                                         <a href="/account/login" onClick={this._changeRoute}>Login</a>
@@ -98,7 +112,11 @@ class AppLayout extends Component {
         );
     }
 
-    _handleUserLoggedIn(e) {
+    _onLogout() {
+        userActions.logout();
+    }
+
+    _handleUserChange(e) {
         let newState = update(this.state, {
             user: {
                 name: {
