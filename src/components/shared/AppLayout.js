@@ -78,24 +78,24 @@ class AppLayout extends Component {
                                         </IconButton>
                                     </div>
                                 ) : (
-                                        <div>
-                                            <Button
-                                                href="/account/login"
-                                                color="contrast"
-                                                dense
-                                                onClick={this._changeRoute}>
-                                                Login
-                                        </Button>
+                                    <div>
+                                        <Button
+                                            href="/account/login"
+                                            color="contrast"
+                                            dense
+                                            onClick={this._changeRoute}>
+                                            Login
+                                    </Button>
 
-                                            <Button
-                                                href="/account/register"
-                                                color="contrast"
-                                                dense
-                                                onClick={this._changeRoute}>
-                                                Register
-                                        </Button>
-                                        </div>
-                                    )
+                                        <Button
+                                            href="/account/register"
+                                            color="contrast"
+                                            dense
+                                            onClick={this._changeRoute}>
+                                            Register
+                                    </Button>
+                                    </div>
+                                )
                             }
                         </div>
                     </Toolbar>
