@@ -7,6 +7,7 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import ExitToApp from 'material-ui-icons/ExitToApp';
 import IconButton from 'material-ui/IconButton';
+import Button from 'material-ui/Button';
 import MenuIcon from 'material-ui-icons/Menu';
 import Drawer from 'material-ui/Drawer';
 import List, { ListItem, ListItemText } from 'material-ui/List';
@@ -82,8 +83,21 @@ class AppLayout extends Component {
                                     </div>
                                 ) : (
                                     <div>
-                                        <a href="/account/login" onClick={this._changeRoute}>Login</a>
-                                        <a href="/account/register" onClick={this._changeRoute}>Register</a>
+                                        <Button
+                                            href="/account/login"
+                                            color="contrast"
+                                            dense
+                                            onClick={this._changeRoute}>
+                                            Login
+                                        </Button>
+
+                                        <Button
+                                            href="/account/register"
+                                            color="contrast"
+                                            dense
+                                            onClick={this._changeRoute}>
+                                            Register
+                                        </Button>
                                     </div>
                                 )
                             }
