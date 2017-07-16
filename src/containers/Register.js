@@ -119,7 +119,7 @@ class Register extends Component {
     }
 
     handleSubmitResponse(e) {
-        console.log(e);
+        userActions.login(this.state.user);
     }
 }
 
