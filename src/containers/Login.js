@@ -5,7 +5,6 @@ import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 
 import userActions from '../actions/user/userActions';
-import * as types from '../actions/user/userActionTypes';
 import userStore from '../stores/userStore';
 
 class Login extends Component {
@@ -22,13 +21,6 @@ class Login extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleValidation = this.handleValidation.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleSubmitResponse = this.handleSubmitResponse.bind(this);
-
-        userStore.on(types.USER_LOGGEDIN, this.handleSubmitResponse);
-    }
-
-    componentWillUnmount() {
-        userStore.removeListener(types.USER_LOGGEDIN, this.handleSubmitResponse);
     }
 
     render() {
@@ -106,10 +98,6 @@ class Login extends Component {
         this.handleValidation(e);
 
         userActions.login(this.state.user);
-    }
-
-    handleSubmitResponse(e) {
-        console.log(e);
     }
 }
 

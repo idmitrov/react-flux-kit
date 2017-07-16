@@ -38,11 +38,10 @@ class AppLayout extends Component {
 
         this._changeRoute = this._changeRoute.bind(this);
         this._toggleDrawer = this._toggleDrawer.bind(this);
-        this._handleUserChange = this._handleUserChange.bind(this);
-        this._onLogout = this._onLogout.bind(this);
+        this._handleUserAuth = this._handleUserAuth.bind(this);
 
-        userStore.on(types.USER_LOGGEDIN, this._handleUserChange);
-        userStore.on(types.USER_LOGGEDOUT, this._handleUserChange);
+        userStore.on(types.USER_LOGGEDIN, this._handleUserAuth);
+        userStore.on(types.USER_LOGGEDOUT, this._handleUserAuth);
     }
 
     render() {
@@ -67,7 +66,7 @@ class AppLayout extends Component {
                                     <div>
                                         Hi {this.state.user.name}
                                         <IconButton
-                                            onClick={this._onLogout}
+                                            onClick={userActions.logout}
                                             style={{ "verticalAlign": "middle" }}
                                             color="contrast"
                                             aria-label="Logout">
@@ -112,11 +111,7 @@ class AppLayout extends Component {
         );
     }
 
-    _onLogout() {
-        userActions.logout();
-    }
-
-    _handleUserChange(e) {
+    _handleUserAuth(e) {
         let newState = update(this.state, {
             user: {
                 name: {
@@ -125,8 +120,10 @@ class AppLayout extends Component {
             }
         });
 
-        this.setState(newState);
-        history.push('/');
+        this.setState(newState, () => {
+            history.push('/');
+            console.log(e.message);
+        });
     }
 
     _changeRoute(e) {
