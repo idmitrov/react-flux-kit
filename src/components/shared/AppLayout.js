@@ -27,7 +27,7 @@ class AppLayout extends Component {
                 opened: false,
                 list: [
                     { name: 'Home', href: '/', title: 'Home' },
-                    { name: 'About', href: '/about', title: 'About' },
+                    { name: 'About', href: '/about', title: 'About', role: "user" },
                     { name: 'Test', href: '/test', title: 'Test' }
                 ]
             },
@@ -42,6 +42,11 @@ class AppLayout extends Component {
 
         userStore.on(types.USER_LOGGEDIN, this._handleUserAuth);
         userStore.on(types.USER_LOGGEDOUT, this._handleUserAuth);
+        userStore.on(types.USER_AUTHENTICATED, this._handleUserAuth);
+    }
+
+    componentDidMount() {
+        userActions.authenticate();
     }
 
     render() {

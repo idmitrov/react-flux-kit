@@ -10,10 +10,24 @@ const callAction = (actionType, data) => {
 
 const userActions = {
     /**
+    * @name authorize
+    * @desc dispatch an action for user authorize
+    */
+    authorize: () => {
+        callAction(types.USER_AUTHORIZE);
+    },
+    /**
+     * @name authenticate
+     * @desc dispatch an action for user authenticate
+     */
+    authenticate: () => {
+        callAction(types.USER_AUTHENTICATE);
+    },
+    /**
      * @name logout
      * @desc dispatch an action for user logout
      */
-    logout() {
+    logout: () => {
         callAction(types.USER_LOGOUT);
     },
     /**

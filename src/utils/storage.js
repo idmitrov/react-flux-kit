@@ -15,7 +15,7 @@ const storage = {
      * @desc Add storage item
      */
     add: (key, value) => {
-        if (this.get(key)) {
+        if (localStorage.getItem(key)) {
             console.warn(`Storage already containst an item called: ${key}`);
         } else {
             localStorage.setItem(key, value);

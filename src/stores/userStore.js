@@ -3,12 +3,13 @@ import { EventEmitter } from 'events';
 import requester from '../utils/requester';
 import dispatcher from '../tools/dispatcher';
 import * as types from '../actions/user/userActionTypes';
+import storage from '../utils/storage';
 
 class UserStore extends EventEmitter {
     constructor() {
         super();
 
-        this.user = null;
+        this.user = {};
         this.login = this.login.bind(this);
         this.register = this.register.bind(this);
         this.handleAction = this.handleAction.bind(this);
@@ -20,10 +21,12 @@ class UserStore extends EventEmitter {
      */
     logout() {
         this.user = null;
+        storage.clear();
 
         this.emit(types.USER_LOGGEDOUT, {
             user: {
-                name: null
+                name: null,
+                token: null
             },
             message: "Catch you later!"
         });
@@ -43,6 +46,8 @@ class UserStore extends EventEmitter {
                         token: response.token
                     };
 
+                    storage.add('token', this.user.token);
+                    storage.add('username', this.user.name);
                     this.emit(types.USER_LOGGEDIN, response);
                 }
             });
@@ -68,7 +73,15 @@ class UserStore extends EventEmitter {
      * @param {Object} user 
      */
     authenticate() {
+        this.user.name = storage.get('username');
+        this.user.token = storage.get('token');
+        let message = 'Welcome, please login or register';
 
+        if (this.user.name && this.user.token) {
+            message = `Welcome back ${this.user.name}`;
+        }
+
+        this.emit(types.USER_AUTHENTICATED, {user: this.user, message: message});
     }
 
     /**
@@ -77,7 +90,7 @@ class UserStore extends EventEmitter {
      * @param {Object} user 
      */
     authorize() {
-
+        console.log('authorize() METHOD NOT IMPLEMENTED');
     }
 
     /**
@@ -97,6 +110,14 @@ class UserStore extends EventEmitter {
             }
             case types.USER_LOGOUT: {
                 this.logout();
+                break;
+            }
+            case types.USER_AUTHENTICATE: {
+                this.authenticate();
+                break;
+            }
+            case types.USER_AUTHORIZE: {
+                this.authorize();
                 break;
             }
             default: break;
