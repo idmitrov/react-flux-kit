@@ -1,12 +1,13 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 
+import storage from '../../utils/storage';
+
 const PrivateRoute = ({ component: Component, ...rest }) => {
+    let isAuthorized = storage.get('token');
+    
     return (
         <Route render={props => {
-            // TODO: Add logic for isAuthorized 
-            let isAuthorized = false;
-
             if (isAuthorized) {
                 return <Component {...props} />;
             } else {
