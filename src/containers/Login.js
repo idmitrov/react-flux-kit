@@ -5,7 +5,6 @@ import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 
 import userActions from '../actions/user/userActions';
-import userStore from '../stores/userStore';
 
 class Login extends Component {
     constructor() {
@@ -18,9 +17,9 @@ class Login extends Component {
             }
         }
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleValidation = this.handleValidation.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this._handleChange = this._handleChange.bind(this);
+        this._handleValidation = this._handleValidation.bind(this);
+        this._handleSubmit = this._handleSubmit.bind(this);
     }
 
     render() {
@@ -40,8 +39,8 @@ class Login extends Component {
                             type="email"
                             required
                             marginForm
-                            onChange={this.handleChange}
-                            onBlur={this.handleValidation}
+                            onChange={this._handleChange}
+                            onBlur={this._handleValidation}
                             data-required
                             data-error-message="Invalid email"
                         />
@@ -56,8 +55,8 @@ class Login extends Component {
                             type="password"
                             required
                             marginForm
-                            onChange={this.handleChange}
-                            onBlur={this.handleValidation}
+                            onChange={this._handleChange}
+                            onBlur={this._handleValidation}
                             data-required
                             data-error-message="Invalid email"
                         />
@@ -69,7 +68,7 @@ class Login extends Component {
                         <Button
                             raised
                             color="contrast"
-                            onClick={this.handleSubmit}>
+                            onClick={this._handleSubmit}>
                             Login
                         </Button>
                     </div>
@@ -78,11 +77,11 @@ class Login extends Component {
         );
     }
 
-    handleValidation(e) {
+    _handleValidation(e) {
         // TODO: Find a way to validate all inputs
     }
 
-    handleChange(e) {
+    _handleChange(e) {
         let newState = update(this.state, {
             user: {
                 [e.target.name]: {
@@ -94,8 +93,8 @@ class Login extends Component {
         this.setState(newState);
     }
 
-    handleSubmit(e) {
-        this.handleValidation(e);
+    _handleSubmit(e) {
+        this._handleValidation(e);
 
         userActions.login(this.state.user);
     }

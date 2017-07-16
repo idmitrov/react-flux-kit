@@ -20,16 +20,16 @@ class Register extends Component {
             }
         };
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleValidation = this.handleValidation.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleSubmitResponse = this.handleSubmitResponse.bind(this);
+        this._handleChange = this._handleChange.bind(this);
+        this._handleValidation = this._handleValidation.bind(this);
+        this._handleSubmit = this._handleSubmit.bind(this);
+        this._handleSubmitResponse = this._handleSubmitResponse.bind(this);
 
-        userStore.on(types.USER_REGISTERED, this.handleSubmitResponse);
+        userStore.on(types.USER_REGISTERED, this._handleSubmitResponse);
     }
 
     componentWillUnmount() {
-        userStore.removeListener(types.USER_REGISTERED, this.handleSubmitResponse);
+        userStore.removeListener(types.USER_REGISTERED, this._handleSubmitResponse);
     }
 
     render() {
@@ -49,8 +49,8 @@ class Register extends Component {
                             type="email"
                             required
                             marginForm
-                            onChange={this.handleChange}
-                            onBlur={this.handleValidation}
+                            onChange={this._handleChange}
+                            onBlur={this._handleValidation}
                         />
                     </div>
                 </div>
@@ -62,8 +62,8 @@ class Register extends Component {
                             label="Name"
                             required
                             marginForm
-                            onChange={this.handleChange}
-                            onBlur={this.handleValidation}
+                            onChange={this._handleChange}
+                            onBlur={this._handleValidation}
                         />
                     </div>
                 </div>
@@ -76,8 +76,8 @@ class Register extends Component {
                             type="password"
                             required
                             marginForm
-                            onChange={this.handleChange}
-                            onBlur={this.handleValidation}
+                            onChange={this._handleChange}
+                            onBlur={this._handleValidation}
                         />
                     </div>
                 </div>
@@ -87,7 +87,7 @@ class Register extends Component {
                         <Button
                             raised
                             color="contrast"
-                            onClick={this.handleSubmit}>
+                            onClick={this._handleSubmit}>
                             Register
                         </Button>
                     </div>
@@ -96,7 +96,7 @@ class Register extends Component {
         );
     }
 
-    handleChange(e) {
+    _handleChange(e) {
         let newState = update(this.state, {
             user: {
                 [e.target.name]: {
@@ -108,17 +108,17 @@ class Register extends Component {
         this.setState(newState);
     }
 
-    handleValidation(e) {
+    _handleValidation(e) {
         // TODO: Find a way to validate all inputs
     }
 
-    handleSubmit(e) {
-        this.handleValidation(e);
+    _handleSubmit(e) {
+        this._handleValidation(e);
 
         userActions.register(this.state.user);
     }
 
-    handleSubmitResponse(e) {
+    _handleSubmitResponse(e) {
         userActions.login(this.state.user);
     }
 }
