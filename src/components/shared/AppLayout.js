@@ -28,11 +28,7 @@ class AppLayout extends Component {
         this.state = {
             drawer: {
                 opened: false,
-                list: [
-                    { name: 'Home', href: '/', title: 'Home' },
-                    { name: 'About', href: '/about', title: 'About', role: "user" },
-                    { name: 'Test', href: '/test', title: 'Test' }
-                ]
+                list: []
             },
             user: {
                 name: null
@@ -82,24 +78,24 @@ class AppLayout extends Component {
                                         </IconButton>
                                     </div>
                                 ) : (
-                                    <div>
-                                        <Button
-                                            href="/account/login"
-                                            color="contrast"
-                                            dense
-                                            onClick={this._changeRoute}>
-                                            Login
+                                        <div>
+                                            <Button
+                                                href="/account/login"
+                                                color="contrast"
+                                                dense
+                                                onClick={this._changeRoute}>
+                                                Login
                                         </Button>
 
-                                        <Button
-                                            href="/account/register"
-                                            color="contrast"
-                                            dense
-                                            onClick={this._changeRoute}>
-                                            Register
+                                            <Button
+                                                href="/account/register"
+                                                color="contrast"
+                                                dense
+                                                onClick={this._changeRoute}>
+                                                Register
                                         </Button>
-                                    </div>
-                                )
+                                        </div>
+                                    )
                             }
                         </div>
                     </Toolbar>
@@ -133,17 +129,33 @@ class AppLayout extends Component {
     }
 
     _handleUserAuth(e) {
+        let privateDrawer = {
+            list: [
+                { name: 'Home', href: '/', title: 'Home' }
+            ]
+        };
+
+        if (e.user.name) {
+            privateDrawer.list = [
+                ...privateDrawer.list,
+                { name: 'About', href: '/about', title: 'About', role: "user" }
+            ];
+        }
+
         let newState = update(this.state, {
             user: {
                 name: {
                     "$set": e.user.name
                 }
+            },
+            drawer: {
+                "$merge": privateDrawer
             }
         });
 
         this.setState(newState, () => {
             history.push('/');
-            sharedActions.notfy({message: e.message, type: e.type});
+            sharedActions.notfy({ message: e.message, type: e.type });
         });
     }
 
