@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+import sharedStore from '../../stores/sharedStore';
+import * as sharedTypes from '../../actions/shared/sharedActionTypes';
+
 import Snackbar from 'material-ui/Snackbar';
 
 class AppNotifier extends Component {
@@ -13,6 +16,9 @@ class AppNotifier extends Component {
         };
 
         this._handleRequestClose = this._handleRequestClose.bind(this);
+        this._handleNotification = this._handleNotification.bind(this);
+
+        sharedStore.on(sharedTypes.NOTIFIED, this._handleNotification);
     }
 
     render() {

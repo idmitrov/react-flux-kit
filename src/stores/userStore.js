@@ -28,7 +28,8 @@ class UserStore extends EventEmitter {
                 name: null,
                 token: null
             },
-            message: "Catch you later!"
+            message: "Catch you later!",
+            type: "info"
         });
     }
 
@@ -48,6 +49,8 @@ class UserStore extends EventEmitter {
 
                     storage.add('token', this.user.token);
                     storage.add('username', this.user.name);
+                    response.type = 'success';
+
                     this.emit(types.USER_LOGGEDIN, response);
                 }
             });
@@ -75,13 +78,19 @@ class UserStore extends EventEmitter {
     authenticate() {
         this.user.name = storage.get('username');
         this.user.token = storage.get('token');
-        let message = 'Welcome, please login or register';
+        let messageText = 'Welcome, please login or register',
+            messageType = 'info';
 
         if (this.user.name && this.user.token) {
-            message = `Welcome back ${this.user.name}`;
+            messageText = `Welcome back ${this.user.name}`;
+            messageType = 'info';
         }
 
-        this.emit(types.USER_AUTHENTICATED, {user: this.user, message: message});
+        this.emit(types.USER_AUTHENTICATED, {
+            user: this.user,
+            message: messageText,
+            type: messageType
+        });
     }
 
     /**

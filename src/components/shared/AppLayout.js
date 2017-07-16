@@ -18,6 +18,8 @@ import * as types from '../../actions/user/userActionTypes';
 import userActions from '../../actions/user/userActions';
 import userStore from '../../stores/userStore';
 
+import sharedActions from '../../actions/shared/sharedActions';
+
 class AppLayout extends Component {
     constructor() {
         super();
@@ -127,7 +129,7 @@ class AppLayout extends Component {
 
         this.setState(newState, () => {
             history.push('/');
-            console.log(e.message);
+            sharedActions.notfy({message: e.message, type: e.type});
         });
     }
 
